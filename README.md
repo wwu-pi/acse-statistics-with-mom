@@ -10,7 +10,8 @@ The enterprise application project.
 ### statistics-mom-ejb
 The EJB project. It contains the two message driven beans AverageMDB.java and Median.java, which consume the messages from the JMS topic.
 
-The file META-INF/hornetq-jms.xml contains the configuration for the StatisticsTopic, which is used to exchange messages.
+The file META-INF/config-jms.xml contains the configuration for the StatisticsTopic, which is used to exchange messages.
+(There is also a definition for a queue, which is not actually used).
 
 ### statistics-mom-web
 The dynamic web project. It contains the xhtml page and the Statistics.java backing bean. The backing bean sends a message that contains the entered numbers to the StatisticsTopics and opens a temporary queue that is used by the MDBs to send their responses.
