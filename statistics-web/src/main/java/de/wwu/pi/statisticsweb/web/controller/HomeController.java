@@ -7,19 +7,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import de.wwu.pi.statisticsweb.service.StatisticsService;
+
 @Controller
 @RequestMapping("/")
 public class HomeController {
 
+	@Autowired
+	private StatisticsService statisticsService;
+	
 	@GetMapping
 	public String index(Model model) {
-		model.addAttribute("average", 12.0);
-		model.addAttribute("mean", 11.0);
+		model.addAttribute("average", statisticsService.getAverage());
+		model.addAttribute("median", statisticsService.getMedian());
 		return "home/index";
 	}
 
 	@PostMapping
 	public String index(Double x) {
+		statisticsService.addStatistics(x);
 		return "redirect:/";
 	}
 }
