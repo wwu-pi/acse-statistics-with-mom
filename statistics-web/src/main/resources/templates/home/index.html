@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head th:replace="layout :: head('SocialRequest')"></head>
+<body>
+<nav th:replace="layout :: nav('home')"></nav>
+
+<main role="main" class="container">
+    <form class="row rowjustify-content-center" th:action="@{/}" method="post">
+        <div class="form-group row">
+          <label for="x" class="col-sm-2 col-form-label">X</label>
+          <div class="col-sm-10">
+            <input type="number" id="x" name="x" class="form-control form-control-lg" placeholder="0.0">
+	        </div>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary btn-lg">Add</button>
+        </div>
+    </form>
+
+
+    <div class="mt-5 row">
+        <h1>Statistics</h1>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-2"><strong>Average:</strong></div>
+        <div class="col-sm-10" th:text="${average}">Average</div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2"><strong>Mean:</strong></div>
+        <div class="col-sm-10" th:text="${average}">Mean</div>
+    </div>
+</main>
+
+<footer th:replace="layout :: footer"></footer>
+</body>
+</html>
