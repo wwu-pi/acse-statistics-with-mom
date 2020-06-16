@@ -4,7 +4,10 @@ public interface StatisticsService {
 
 	void addStatistics(Double x);
 	
-	Double getMedian();		
+	Double getMinimum();
+
+	Double getMaximum();
 		
 	Double getAverage();
+
 }

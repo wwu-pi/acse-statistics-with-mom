@@ -8,8 +8,8 @@
 <main role="main" class="container">
     <form class="row rowjustify-content-center" th:action="@{/}" method="post">
         <div class="form-group row">
-          <label for="x" class="col-sm-2 col-form-label">X</label>
-          <div class="col-sm-10">
+          <label for="x" class="col-sm-4 col-form-label">New data point</label>
+          <div class="col-sm-8">
             <input type="number" id="x" name="x" class="form-control form-control-lg" placeholder="0.0">
 	        </div>
         </div>
@@ -28,8 +28,12 @@
         <div class="col-sm-10" th:text="${average}">Average</div>
     </div>
     <div class="row">
-        <div class="col-sm-2"><strong>Median:</strong></div>
-        <div class="col-sm-10" th:text="${median}">Median</div>
+        <div class="col-sm-2"><strong>Minimum:</strong></div>
+        <div class="col-sm-10" th:text="${minimum}">Minimum</div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2"><strong>Maximum:</strong></div>
+        <div class="col-sm-10" th:text="${maximum}">Maximum</div>
     </div>
 </main>
 
