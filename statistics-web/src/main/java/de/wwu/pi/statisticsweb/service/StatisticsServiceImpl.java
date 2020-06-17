@@ -1,19 +1,11 @@
 package de.wwu.pi.statisticsweb.service;
 
-import javax.jms.Connection;
-import javax.jms.DeliveryMode;
 import javax.jms.JMSException;
-import javax.jms.MessageConsumer;
-import javax.jms.MessageProducer;
-import javax.jms.Queue;
-import javax.jms.Session;
-import javax.jms.TextMessage;
 
 import org.apache.activemq.command.ActiveMQObjectMessage;
-import org.apache.activemq.command.ActiveMQQueue;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jms.core.JmsMessagingTemplate;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -61,34 +53,16 @@ public class StatisticsServiceImpl implements StatisticsService {
 	 */
 	protected Double callFunction(String function) {
 
-		Session session;
 		Double result = 0.0;
-		try {
-			// Create connection and Session.
-			Connection con = jmstemplate.getConnectionFactory().createConnection();
-			session = con.createSession(false, Session.AUTO_ACKNOWLEDGE);
+		try {		
+			// Define message creator.
+			MessageCreator creator = (session) -> (session.createTextMessage(function));
 
-			// Create temporary queue for synchronous responses.
-			Queue temporaryqueue = session.createTemporaryQueue();
-			
-			// Create message.
-			TextMessage textMessage = session.createTextMessage(function);
-			textMessage.setJMSReplyTo(temporaryqueue);
-			textMessage.setJMSDeliveryMode(DeliveryMode.NON_PERSISTENT);
-			
-			// Start connection.
-			con.start();
+			// Send and receive a message. A temporary queue is automatically added as replyTo address.
+			ActiveMQObjectMessage message = (ActiveMQObjectMessage) jmstemplate.sendAndReceive("FunctionsQueue", creator);
 
-			// Send message using a message producer.
-			MessageProducer producer = session.createProducer(new ActiveMQQueue("FunctionsQueue"));
-			producer.send(textMessage);
-			// Wait for response to arrive.
-			MessageConsumer consumer = session.createConsumer(temporaryqueue);
-			ActiveMQObjectMessage message = (ActiveMQObjectMessage) consumer.receive();
-
-			// Retrieve answer and close connection.
+			// Retrieve the result.
 			result = (Double) message.getObject();
-			con.close();
 
 		} catch (JMSException e) {
 			e.printStackTrace();

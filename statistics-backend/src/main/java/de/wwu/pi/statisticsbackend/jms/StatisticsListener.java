@@ -2,13 +2,13 @@ package de.wwu.pi.statisticsbackend.jms;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
-import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
-import javax.jms.Session;
 
 import org.apache.activemq.command.ActiveMQTextMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Component;
 
 import de.wwu.pi.statisticsbackend.data.model.DataPoint;
@@ -17,6 +17,9 @@ import de.wwu.pi.statisticsbackend.data.repo.DataPointRepository;
 @Component
 public class StatisticsListener {
 
+	@Autowired
+	private JmsTemplate jmstemplate;
+	
 	@Autowired
 	private DataPointRepository repo;
 
@@ -41,32 +44,34 @@ public class StatisticsListener {
 	 * @param session
 	 * @throws JMSException
 	 */
-	public void callFunction(Message message, Session session) throws JMSException {
+	public void callFunction(Message message) throws JMSException {
 		// Retrieve called function from message object.
 		String function = (String) ((ActiveMQTextMessage) message).getText();
 
-		// Create new object message for the response.
-		final ObjectMessage responseMessage = session.createObjectMessage();
+		// Create new message creator for the response.
+		MessageCreator creator = (session) -> {
+			// Create a object message to encapsulate the response value.
+			final ObjectMessage responseMessage = session.createObjectMessage();
+			// Query the result and add it to the message.
+			switch (function) {
+			case "average":
+				Double avg = repo.findAvgX();
+				responseMessage.setObject(avg);
+				break;
+			case "minimum":
+				Double min = repo.findMinX();
+				responseMessage.setObject(min);
+				break;
+			case "maximum":
+				Double max = repo.findMaxX();
+				responseMessage.setObject(max);
+				break;
+			}
+			return responseMessage;
+		};
 
-		// Query the result and add it to the message.
-		switch (function) {
-		case "average":
-			Double avg = repo.findAvgX();
-			responseMessage.setObject(avg);
-			break;
-		case "minimum":
-			Double min = repo.findMinX();
-			responseMessage.setObject(min);
-			break;
-		case "maximum":
-			Double max = repo.findMaxX();
-			responseMessage.setObject(max);
-			break;
-		}
-
-		// Send the message back to the reply destination.
-		final MessageProducer producer = session.createProducer(message.getJMSReplyTo());
-		producer.send(responseMessage);
+		// Send the result to the temporary reply queue.
+		jmstemplate.send(message.getJMSReplyTo(), creator);
 	}
 
 }
