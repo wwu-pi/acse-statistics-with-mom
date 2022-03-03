@@ -23,6 +23,6 @@ You can run this docker image by installing docker and then executing the follow
     
 Then start both projects by navigating into their root folder an then calling:
 
-    .\mvnw spring-boot:run
+    ./mvnw spring-boot:run
     
 The application is then available under [http://localhost:8080](http://localhost:8080).

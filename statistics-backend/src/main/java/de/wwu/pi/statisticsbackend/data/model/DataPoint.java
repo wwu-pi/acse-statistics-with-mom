@@ -2,11 +2,11 @@ package de.wwu.pi.statisticsbackend.data.model;
 
 import java.io.Serializable;
 
-import javax.annotation.Nonnull;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 @Entity
 /**
@@ -20,7 +20,7 @@ public class DataPoint implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	
-	@Nonnull
+	@NotNull
 	private double x;
 	
 	public DataPoint(double x) {
