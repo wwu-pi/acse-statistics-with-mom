@@ -1,12 +1,12 @@
 package de.wwu.pi.statisticsweb.service;
 
-import javax.jms.JMSException;
-
-import org.apache.activemq.command.ActiveMQObjectMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
+
+import jakarta.jms.JMSException;
+import jakarta.jms.ObjectMessage;
 
 @Service
 public class StatisticsServiceImpl implements StatisticsService {
@@ -59,7 +59,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 			MessageCreator creator = (session) -> (session.createTextMessage(function));
 
 			// Send and receive a message. A temporary queue is automatically added as replyTo address.
-			ActiveMQObjectMessage message = (ActiveMQObjectMessage) jmstemplate.sendAndReceive("FunctionsQueue", creator);
+			ObjectMessage message = (ObjectMessage) jmstemplate.sendAndReceive("FunctionsQueue", creator);
 
 			// Retrieve the result.
 			result = (Double) message.getObject();

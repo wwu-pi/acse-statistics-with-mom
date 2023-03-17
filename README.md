@@ -16,10 +16,10 @@ The spring web project. It provides the web view using the MVC pattern.
 The backend project. It contains the two message listeners, which consume the messages from the JMS queues.
 
 ## How to run the application
-Start an activeMQ server. This is, for instance, possible using the docker image provided at [Docker Hub - rmohr/activemq](https://hub.docker.com/r/rmohr/activemq/).
+Start an ActiveMQ Artemis broker. This is, for instance, possible using the docker image provided at [quay.io](https://quay.io/artemiscloud/activemq-artemis-broker).
 You can run this docker image by installing docker and then executing the following command on the command line:
 
-    docker run -p 61616:61616 -p 8161:8161 rmohr/activemq
+    docker run -e AMQ_USER=admin -e AMQ_PASSWORD=admin -e AMQ_SECURITY_ENABLED=false -p8161:8161 -p61616:61616 --name artemis quay.io/artemiscloud/activemq-artemis-broker
     
 Then start both projects by navigating into their root folder an then calling:
 

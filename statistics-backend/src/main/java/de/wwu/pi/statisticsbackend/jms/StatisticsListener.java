@@ -1,10 +1,5 @@
 package de.wwu.pi.statisticsbackend.jms;
 
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.ObjectMessage;
-
-import org.apache.activemq.command.ActiveMQTextMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
@@ -13,6 +8,10 @@ import org.springframework.stereotype.Component;
 
 import de.wwu.pi.statisticsbackend.data.model.DataPoint;
 import de.wwu.pi.statisticsbackend.data.repo.DataPointRepository;
+import jakarta.jms.JMSException;
+import jakarta.jms.Message;
+import jakarta.jms.ObjectMessage;
+import jakarta.jms.TextMessage;
 
 @Component
 public class StatisticsListener {
@@ -46,7 +45,7 @@ public class StatisticsListener {
 	 */
 	public void callFunction(Message message) throws JMSException {
 		// Retrieve called function from message object.
-		String function = (String) ((ActiveMQTextMessage) message).getText();
+		String function = (String) ((TextMessage) message).getText();
 
 		// Create new message creator for the response.
 		MessageCreator creator = (session) -> {
